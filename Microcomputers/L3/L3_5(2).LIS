@@ -1,0 +1,25 @@
+
+Source file: L3_5(2).X68
+Assembled on: 16-10-05 at: 18:15:41
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1                        *L3_5: Evaluate
+    2                        
+    3                        
+    4  00008000                        ORG       $8000
+    5  00008000 103900009002 START:    MOVE.B    WVALUE+2,D0
+    6  00008006 4880                   EXT.W     D0
+    7  00008008 C1F900009000           MULS      WVALUE,D0
+    8  0000800E 323900009001           MOVE.W    WVALUE+1,D1
+    9  00008014 83FC0003               DIVS      #3,D1
+   10  00008018 D240                   ADD       D0,D1
+   11  0000801A 4E4E                   TRAP      #14
+   12                        
+   13  00009000                        ORG       $9000
+   14  00009000 0002         WVALUE:   DC.W      $2
+   15  00009002 0002                   DC.W      $2
+   16  00009004 03                     DC.B      $3
+   17           00008000               END       START
+
+Lines: 17, Errors: 0, Warnings: 0.

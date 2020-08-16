@@ -1,0 +1,43 @@
+*******************************************************
+Mohammadamin Sheikhtaheri                March 25th, 2020
+0930853
+Samuel Tracz
+0927451
+
+CIS*4650 - Checkpoint 2
+README
+*******************************************************
+
+******************
+Build Instructions
+******************
+To build the parser, type the following into the terminal:
+
+        make
+      
+The cup file required for this is in the school server location:
+
+        /usr/share/java/cup.jar:.
+
+*****************
+Test Instructions
+*****************
+To run any of the test programs, type the following into the terminal:
+
+        java -classpath /usr/share/java/cup.jar:. Main [12345].cm
+        
+To show the abstract syntax tree, add -a to the line above:
+
+        java -classpath /usr/share/java/cup.jar:. Main [12345].cm -a
+    
+The [12345] would be replaced by the number of the test program to be ran.
+
+To show the symbol table, add -s to the run command :
+
+        java -classpath /usr/share/java/cup.jar:. Main [12345].cm -s 
+    
+    *it is recommended that you output the symbol tree to a file
+    because if there are errors, they will both be output to the screen 
+    and the format of the table will be harder to read.
+     
+        java -classpath /usr/share/java/cup.jar:. Main [12345].cm -s > output.txt

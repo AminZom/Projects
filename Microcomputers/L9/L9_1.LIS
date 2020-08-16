@@ -1,0 +1,24 @@
+
+Source file: L9_1.X68
+Assembled on: 16-11-16 at: 19:57:35
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1  0000802A                        ORG       $802A
+    2  0000802A 4EF900009000           JMP       T6
+    3  00008030 4EF900009020           JMP       T7
+    4                                    
+    5  00009000                        ORG       $9000
+    6  00009000 009700002000 T6:       ORI.L     #%0010000000000000,(SP)
+    7  00009006 4E73                   RTE       
+    8                                    
+    9  00009020                        ORG       $9020
+   10  00009020 02970000DFFF T7:       ANDI.L    #%1101111111111111,(SP)
+   11  00009026 4E73                   RTE       
+   12                        
+   13  0000A000                        ORG       $A000
+   14  0000A000 4E47         START:    TRAP      #7
+   15  0000A002 4E4E                   TRAP      #14
+   16           0000A000               END       START
+
+Lines: 16, Errors: 0, Warnings: 0.

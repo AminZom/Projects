@@ -1,0 +1,41 @@
+
+Source file: L10_4.X68
+Assembled on: 16-11-23 at: 19:30:18
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1           0000C001     DUART:    EQU       $C001                 ;;68681 base address
+    2           00000002     SRA:      EQU       2
+    3           00000006     RBA:      EQU       6
+    4           0000001C     OPR_SET:  EQU       14*2                  ;;set bit command reg.
+    5           0000001E     OPR_CLR:  EQU       15*2                  ;;clear bit cmd. reg.
+    6                        
+    7  00008000                        ORG       $8000
+    8  00008000 227C00008048 LOOP:     MOVEA.L   #MESSAGE,A1
+    9  00008006 61000004               BSR       PRINT
+   10  0000800A 4E4E                   TRAP      #14
+   11                                
+   12  0000800C 12C0         PRINT:    MOVE.B    D0,(A1)+
+   13  0000800E D200                   ADD.B     D0,D1
+   14  00008010 207C0000C001           MOVEA.L   #DUART,A0
+   15  00008016 1E280002     PRTCHR:   MOVE.B    SRA(A0),D7
+   16  0000801A 02070001               ANDI.B    #1,D7
+   17  0000801E 67F6                   BEQ       PRTCHR
+   18  00008020 10280006               MOVE.B    RBA(A0),D0
+   19  00008024 1200                   MOVE.B    D0,D1
+   20  00008026 6100000E               BSR       OUT
+   21  0000802A 0C400071               CMPI      #113,D0
+   22  0000802E 67000004               BEQ       EXIT
+   23  00008032 60D8                   BRA       PRINT
+   24  00008034 4E75         EXIT:     RTS       
+   25                        
+   26  00008036 117C00FF001E OUT:      MOVE.B    #$FF,OPR_CLR(A0)
+   27  0000803C 1141001E               MOVE.B    D1,OPR_CLR(A0)
+   28  00008040 1141001C               MOVE.B    D1,OPR_SET(A0)
+   29  00008044 4281                   CLR.L     D1
+   30  00008046 4E75                   RTS       
+   31                                
+   32  00008048 00000001     MESSAGE:  DC.L      1
+   33           00008000               END       LOOP
+
+Lines: 33, Errors: 0, Warnings: 0.

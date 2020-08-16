@@ -1,0 +1,36 @@
+
+Source file: L8_2.X68
+Assembled on: 16-11-09 at: 17:49:34
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1  00008000                        ORG       $8000
+    2  00008000 343C0002     START:    MOVE.W    #2,D2
+    3  00008004 363C0003               MOVE.W    #3,D3
+    4  00008008 383C0004               MOVE.W    #4,D4
+    5  0000800C 4FF900009020           LEA       $9020,SP
+    6  00008012 3F02                   MOVE.W    D2,-(SP)
+    7  00008014 3F03                   MOVE.W    D3,-(SP)
+    8  00008016 3F04                   MOVE.W    D4,-(SP)
+    9  00008018 4EB900008024           JSR       SOLVEQUAD
+   10  0000801E 4FEF0006               LEA       6(SP),SP
+   11  00008022 4E4E                   TRAP      #14
+   12                                
+   13  00008024 48E73800     SOLVEQUAD: MOVEM.L   D2-D4,-(SP)
+   14  00008028 342F0014               MOVE.W    20(SP),D2
+   15  0000802C C5C2                   MULS      D2,D2
+   16  0000802E C5FC0005               MULS      #5,D2
+   17  00008032 362F0014               MOVE.W    20(SP),D3
+   18  00008036 C7FC0002               MULS      #2,D3
+   19  0000803A 382F0012               MOVE.W    18(SP),D4
+   20  0000803E C7C4                   MULS      D4,D3
+   21  00008040 382F0010               MOVE.W    16(SP),D4
+   22  00008044 C9C4                   MULS      D4,D4
+   23  00008046 9443                   SUB.W     D3,D2
+   24  00008048 D444                   ADD.W     D4,D2
+   25  0000804A 3202                   MOVE.W    D2,D1
+   26  0000804C 4CDF001C               MOVEM.L   (SP)+,D2-D4
+   27  00008050 4E75                   RTS       
+   28           00008000               END       START
+
+Lines: 28, Errors: 0, Warnings: 0.

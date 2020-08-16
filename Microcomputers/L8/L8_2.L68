@@ -1,0 +1,42 @@
+00008000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.02
+Created On: 11/9/2016 6:49:46 PM
+
+00008000                             1              ORG         $8000
+00008000  343C 0002                  2  START       MOVE.W      #2,D2
+00008004  363C 0003                  3              MOVE.W      #3,D3
+00008008  383C 0004                  4              MOVE.W      #4,D4
+0000800C  4FF9 00009020              5              LEA         $9020,SP
+00008012  3F02                       6              MOVE.W      D2,-(SP)
+00008014  3F03                       7              MOVE.W      D3,-(SP)
+00008016  3F04                       8              MOVE.W      D4,-(SP)
+00008018  4EB9 00008024              9              JSR         solveQuad
+0000801E  4FEF 0006                 10              LEA         6(SP),SP
+00008022  4E4E                      11              TRAP        #14
+00008024                            12          
+00008024  48E7 3800                 13  solveQuad   MOVEM.L     D2-D4,-(SP)
+00008028  342F 0014                 14              MOVE.W      20(SP),D2
+0000802C  C5C2                      15              MULS        D2,D2
+0000802E  C5FC 0005                 16              MULS        #5,D2
+00008032  362F 0014                 17              MOVE.W      20(SP),D3
+00008036  C7FC 0002                 18              MULS        #2,D3
+0000803A  382F 0012                 19              MOVE.W      18(SP),D4
+0000803E  C7C4                      20              MULS        D4,D3
+00008040  382F 0010                 21              MOVE.W      16(SP),D4
+00008044  C9C4                      22              MULS        D4,D4
+00008046  9443                      23              SUB.W       D3,D2
+00008048  D444                      24              ADD.W       D4,D2
+0000804A  3202                      25              MOVE.W      D2,D1
+0000804C  4CDF 001C                 26              MOVEM.L     (SP)+,D2-D4
+00008050  4E75                      27              RTS
+00008052                            28              END         START
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+SOLVEQUAD           8024
+START               8000

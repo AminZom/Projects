@@ -1,0 +1,9 @@
+CIS 4150 Lab 1 Questions:
+
+echo: Displays a line of text/variable to standard output or a file.
+grep: Searches for lines within the given files that match a given pattern list.
+cut: Cuts sections from each line of given files, and writes the result to standard output.
+-d: Specifies the delimiter for the cut command.
+-c: Specifies to the grep command to only display the number of lines the match was found in.
+-f: Checks if the given file name is of type file.
+-f2: Extracts the 2nd field from the line and displays it to standard output

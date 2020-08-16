@@ -1,0 +1,31 @@
+00008000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.02
+Created On: 11/9/2016 6:48:53 PM
+
+00008000                             1              ORG         $8000
+00008000  303C FFFB                  2  START       MOVE.W      #-5,D0
+00008004  4FF9 00009010              3              LEA         $9010,SP
+0000800A  3F00                       4              MOVE.W      D0,-(SP)
+0000800C  4EB9 00008018              5              JSR         solveQuad
+00008012  4FEF 0002                  6              LEA         2(SP),SP
+00008016  4E4E                       7              TRAP        #14
+00008018                             8          
+00008018  322F 0004                  9  solveQuad   MOVE.W      4(SP),D1
+0000801C  C3C1                      10              MULS        D1,D1
+0000801E  C3FC 0005                 11              MULS        #5,D1
+00008022  342F 0004                 12              MOVE.W      4(SP),D2
+00008026  C5FC 0002                 13              MULS        #2,D2
+0000802A  9242                      14              SUB.W       D2,D1
+0000802C  5C41                      15              ADD.W       #6,D1
+0000802E  4E75                      16              RTS
+00008030                            17              END         START
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+SOLVEQUAD           8018
+START               8000

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Genealogy App</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CHANGE ME">
+    <meta name="keywords" content="CHANGE ME">
+    <meta name="author" content="CHANGE ME">
+    <!-- Load jquery, bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <!-- Custom CSS End -->
+</head>
+<body>
+	<h5>Status Panel</h5>
+	<div class="card" style="width:36rem;height:7rem;overflow-y:scroll;overflow-x:scroll;">
+	  <div class="card-body">
+		<p class="card-text" id = "statusText"></p>
+	  </div>
+	</div>
+	<input id = "clearStatus" type = "submit" class = "btn btn-primary" value = "Clear">
+	<hr>
+	<h5>File Log Panel</h5>
+	<div style="height:200px;overflow:auto;">
+		<table id = "fileLogTable" class="table table-hover table-bordered table-sm">
+		  <thead class="thead-dark">
+			<tr>
+			  <th scope="col">File Name (click to download)</th>
+			  <th scope="col">Source</th>
+			  <th scope="col">GEDC Version</th>
+			  <th scope="col">Encoding</th>
+			  <th scope="col">Submitter Name</th>
+			  <th scope="col">Submitter Address</th>
+			  <th scope="col">Number of Individuals</th>
+			  <th scope="col">Number of Families</th>
+			</tr>
+		  </thead>
+		</table>
+	</div>
+	<!<input id = "refresh" type = "submit" class = "btn btn-primary" value = "Refresh">
+	<hr>
+	<h5>GEDCOM View Panel</h5>
+	<div style="height:200px;overflow:auto;">
+		<table id = "viewPanelTable" class="table table-hover table-bordered table-sm">
+		  <thead class="thead-dark">
+			<tr>
+			  <th scope="col">Given Name</th>
+			  <th scope="col">Surname</th>
+			  <th scope="col">Sex</th>
+			  <th scope="col">Family Size</th>
+			</tr>
+		  </thead>
+		  <tbody>
+			<tr>
+			  <td>William</td>
+			  <td>Shakespeare</td>
+			  <td>Male</td>
+			  <td>5</td>
+			</tr>
+		  </tbody>
+		</table>
+	</div>
+    <!--<h3>Download test</h3>
+    If simpleValid.ged exists in the uploads/ directory on the server, then clicking on the link below will download it from the server.<br>
+    <a href="/uploads/simpleValid.ged">simpleValid.ged</a>-->
+    <hr>
+    <h5>File Upload</h5>
+	<div></div>
+    <form id = "fileForm" action = "/upload" method = "POST" encType = "multipart/form-data">
+		<input id = "fileInput" type="file" style="display:none;" name = "uploadFile"/>
+	</form>
+	<button id = "uploadButton" type="button" class = "btn btn-primary">Select File</button>
+	<hr>
+	<h5>Create Simple GEDCOM</h5>
+	<div></div>
+	<form id = "GEDCOMform">
+	  <div class="form-group">
+		<label for="fileName">File Name</label>
+		<input type="text" class="form-control" id="fileName" placeholder="Enter file name here">
+		<small id="fileNameNotif" class="form-text text-muted">Required.</small>
+	  </div>
+	  <div class="form-group">
+		<label for="source">Source</label>
+		<input type="text" class="form-control" id="source" placeholder="Enter source here" value = "PAF">
+	  </div>
+	  <div class="form-group">
+		<label for="radioASCII">Encoding</label>
+		<div></div>
+		<div class="btn-group btn-group-toggle" data-toggle="buttons">
+		  <label class="btn btn-outline-success active">
+			<input type="radio" name="encodings" id="radioASCII" autocomplete="off" checked> ASCII
+		  </label>
+		  <label class="btn btn-outline-success">
+			<input type="radio" name="encodings" id="radioUTF8" autocomplete="off"> UTF-8
+		  </label>
+		  <label class="btn btn-outline-success">
+			<input type="radio" name="encodings" id="radioANSEL" autocomplete="off"> ANSEL
+		  </label>
+		  <label class="btn btn-outline-success">
+			<input type="radio" name="encodings" id="radioUNICODE" autocomplete="off"> UNICODE
+		  </label>
+		</div>
+	  </div>
+	  <div class="form-group">
+		<label for="gedcVersion">GEDC Version</label>
+		<input type="number" class="form-control" id="gedcVersion" placeholder="Enter GEDC Version here" value = 5.5>
+	  </div>
+	  <div class="form-group">
+		<label for="submitterName">Submitter Name</label>
+		<input type="text" class="form-control" id="submitterName" placeholder="ex. randomwebsite.com">
+		<small id="submitterNameNotif" class="form-text text-muted">Required.</small>
+	  </div>
+	  <div class="form-group">
+		<label for="submitterAddress">Submitter Address</label>
+		<input type="text" class="form-control" id="submitterAddress">
+		<small id="submitterAddressNotif" class="form-text text-muted">Can be blank.</small>
+	  </div>
+	  <input id = "createSimpleGEDCOM" type = "submit" class = "btn btn-primary" value = "Create Simple GEDCOM">
+	</form>
+	<hr>
+	<h5>Add Individual</h5>
+	<div></div>
+	<h6>Select File</h6>
+	<form id = "addIndividualForm">
+		<div class="input-group mb-3">
+		  <select class="custom-select" id="File Select Individual">
+			<option selected>simpleValid.ged</option>
+			<option value="2">minValid.ged</option>
+		  </select>
+		</div>
+		<div class="form-group">
+		   <label for="givenName">Given Name</label>
+		   <input type="text" class="form-control" id="givenName" placeholder="Enter given name here">
+	    </div>
+	    <div class="form-group">
+		   <label for="surname">Surname</label>
+		   <input type="text" class="form-control" id="surname" placeholder="Enter surname here">
+	    </div>
+	    <input id = "addIndividual" type = "submit" class = "btn btn-primary" value = "Add Individual">
+	</form>
+	<hr>
+	<h5>Get Descendants</h5>
+	<div></div>
+	<form id = "getDescendantsForm">
+		<div class="input-group mb-3">
+		  <select class="custom-select" id="File Select Descendants">
+			<option selected>simpleValid.ged</option>
+			<option value="2">minValid.ged</option>
+		  </select>
+		</div>
+		<div class="form-group">
+		   <label for="givenNameDec">Given Name</label>
+		   <input type="text" class="form-control" id="givenNameDec" placeholder="Enter given name here">
+	    </div>
+	    <div class="form-group">
+		   <label for="surnameDec">Surname</label>
+		   <input type="text" class="form-control" id="surnameDec" placeholder="Enter surname here">
+	    </div>
+	    <input id = "getDescendants" type = "submit" class = "btn btn-primary" value = "Get Descendants">
+	    <h6></h6>
+	    <div style="height:100px;width:500px;overflow:auto;">
+			<table id = "descendantsTable" class="table table-hover table-bordered table-sm">
+			  <thead class="thead-dark">
+				<tr>
+				  <th scope="col">Generation</th>
+				  <th scope="col">Descendants</th>
+				</tr>
+			  </thead>
+			  <tbody>
+				<tr>
+				  <th scope="row">1</th>
+				  <td>Hamnet Shakespeare, Judith Shakespeare, Elizabeth Shakespeare</td>
+				</tr>
+				<tr>
+				  <th scope="row">2</th>
+				  <td>Shakespeare Shakespeare, Thomas Quiney</td>
+				</tr>
+			</table>
+		</div>
+	</form>
+	<hr>
+	<h5>Get Anscestors</h5>
+	<div></div>
+	<form id = "getAnscestorsForm">
+		<div class="input-group mb-3">
+		  <select class="custom-select" id="File Select Anscenstors">
+			<option selected>simpleValid.ged</option>
+			<option value="2">minValid.ged</option>
+		  </select>
+		</div>
+		<div class="form-group">
+		   <label for="givenNameAns">Given Name</label>
+		   <input type="text" class="form-control" id="givenNameAns" placeholder="Enter given name here">
+	    </div>
+	    <div class="form-group">
+		   <label for="surnameAns">Surname</label>
+		   <input type="text" class="form-control" id="surnameAns" placeholder="Enter surname here">
+	    </div>
+	    <input id = "getAnscestors" type = "submit" class = "btn btn-primary" value = "Get Anscestors">
+	    <h6></h6>
+	    <div style="height:100px;width:500px;overflow:auto;">
+			<table id = "anscestorsTable" class="table table-hover table-bordered table-sm">
+			  <thead class="thead-dark">
+				<tr>
+				  <th scope="col">Generation</th>
+				  <th scope="col">Anscestors</th>
+				</tr>
+			  </thead>
+			  <tbody>
+				<tr>
+				  <th scope="row">1</th>
+				  <td>Hamnet Shakespeare, Judith Shakespeare, Elizabeth Shakespeare</td>
+				</tr>
+				<tr>
+				  <th scope="row">2</th>
+				  <td>Shakespeare Shakespeare, Thomas Quiney</td>
+				</tr>
+			</table>
+		</div>
+	</form>
+	<hr>
+    <!-- Leave me at the bottom of body -->
+    <script src="/index.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+

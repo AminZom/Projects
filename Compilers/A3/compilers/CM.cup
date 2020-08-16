@@ -1,0 +1,333 @@
+/*
+  Created by: Samuel Tracz and Mohammadamin Sheikhtaheri
+  File Name: CM.cup
+  To Build: java java_cup.Main < CM.cup
+*/
+   
+   
+/* ----------------------Preliminary Declarations Section--------------------*/
+   
+/* Import the class java_cup.runtime.*  */
+//import java_cup.runtime.*;
+import absyn.*;
+   
+/* Parser code to change the way the parser reports errors (include
+   line and column number of the error). */
+parser code {:
+    
+    /* Change the method report_error so it will display the line and
+       column of where the error occurred in the input as well as the
+       reason for the error which is passed into the method in the
+       String 'message'. */
+    public void report_error(String message, int row, int col) {
+   
+        /* Create a StringBuffer called 'm' with the string 'Error' in it. */
+        StringBuffer m = new StringBuffer("Error");
+   
+        /* Check if the information passed to the method is the same
+           type as the type java_cup.runtime.Symbol. */
+        //if (info instanceof java_cup.runtime.Symbol) {
+            /* Declare a java_cup.runtime.Symbol object 's' with the
+               information in the object info that is being typecasted
+               as a java_cup.runtime.Symbol object. */
+           // java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+   
+            /* Check if the line number in the input is greater or
+               equal to zero. */
+            //if (s.left >= 0) {                
+                /* Add to the end of the StringBuffer error message
+                   the line number of the error in the input. */
+                m.append(" in line "+ (row+1));   
+                /* Check if the column number in the input is greater
+                   or equal to zero. */
+                //if (s.right >= 0)                    
+                    /* Add to the end of the StringBuffer error message
+                       the column number of the error in the input. */
+                    m.append(", column "+ (col+1));
+            //}
+        //}
+   
+        /* Add to the end of the StringBuffer error message created in
+           this method the message that was passed into this method. */
+        m.append(" : "+message);
+   
+        /* Print the contents of the StringBuffer 'm', which contains
+           an error message, out on a line. */
+        System.err.println(m);
+    }
+   
+    /* Change the method report_fatal_error so when it reports a fatal
+       error it will display the line and column number of where the
+       fatal error occurred in the input as well as the reason for the
+       fatal error which is passed into the method in the object
+       'message' and then exit.*/
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        System.exit(1);
+    }
+
+:};
+   
+   
+/* ------------Declaration of Terminals and Non Terminals Section----------- */
+   
+terminal IF, ELSE, INT, RETURN, VOID, WHILE;
+terminal EQ, LT, GT, PLUS, MINUS, TIMES, OVER;
+terminal LPAREN, RPAREN, SEMI, SQLPAREN, SQRPAREN;
+terminal LTE, GTE, EQEQ, NEQ, COMMA, CURLYLPAREN, CURLYRPAREN;
+terminal String ID, NUM;
+terminal DecList ERROR;
+
+non terminal Exp statement, expression;
+non terminal ExpList arglist, statementlist;
+non terminal Dec fundeclaration;
+non terminal VarDec vardeclaration, param;
+non terminal DecList declarationlist, program;
+non terminal VarDecList localdeclarations, paramlist;
+non terminal String vartypes;
+
+//precedence
+precedence nonassoc EQEQ, NEQ, LT, LTE, GT, GTE;
+precedence left COMMA, ELSE, ERROR, INT, VOID, LPAREN, SEMI;
+precedence left PLUS, MINUS;
+precedence left TIMES, OVER;
+
+
+/* ----------------------------Grammar Section-------------------- */
+   
+start with program;
+
+program ::= declarationlist:dl
+            {: RESULT = dl; :}
+           | ERROR:e
+            {:  parser.report_error("invalid", null); 
+                RESULT = e; 
+            :}
+          ;
+            
+declarationlist ::= declarationlist:dl vardeclaration:d
+                     {: DecList t = dl;
+                        while( t.tail != null )
+                            t = t.tail;
+                        t.tail = new DecList(d, null);
+                        RESULT = dl;
+                     :}
+                   | declarationlist:dl fundeclaration:d
+                     {: DecList t = dl;
+                        while( t.tail != null )
+                            t = t.tail;
+                        t.tail = new DecList(d, null);
+                        RESULT = dl;
+                     :}
+                   | vardeclaration:v
+                     {: RESULT = new DecList(v,null); :}
+                   | fundeclaration:f
+                     {: RESULT = new DecList(f,null); :}
+                   ;
+              
+vardeclaration ::= vartypes:vt ID:i SEMI
+                    {: RESULT = new SimpleDec(vtleft, vtright, vt, i); :}
+                 | vartypes:vt ID:i SQLPAREN NUM:n SQRPAREN SEMI
+                    {: RESULT = new ArrayDec(vtleft, vtright, vt, i, new IntExp(nleft, nright, Integer.parseInt(n))); :}
+                 | vartypes:vt SQLPAREN NUM:n SQRPAREN SEMI
+                   {: parser.report_error("invalid vardec (missing id for array)", vtleft, vtright);
+                        RESULT = new ArrayDec(vtleft, vtright, vt, null, new IntExp(nleft, nright, Integer.parseInt(n))); :}
+                 | vartypes:vt NUM:e SQLPAREN NUM:n SQRPAREN SEMI
+                   {: parser.report_error("invalid vardec (invalid id for array)", vtleft, vtright);
+                        RESULT = new ArrayDec(vtleft, vtright, vt, null, new IntExp(nleft, nright, Integer.parseInt(n))); :}
+                 | vartypes:vt ID:i SQLPAREN:q error:e SQRPAREN SEMI
+                    {: parser.report_error("invalid vardec (wrong number for array)", qleft, qright);
+                        RESULT = new ArrayDec(qleft, qright, vt, i, new IntExp(qleft, qright, -1)); :}
+                 | vartypes:vt ID:i error:e
+                 	 {: parser.report_error("variable declaration error", ileft, iright);
+                        RESULT = new SimpleDec(ileft, iright, vt, i);
+                   :}
+				 | vartypes:vt ID:i SQLPAREN error:e
+                 	 {: parser.report_error("array variable declaration error", ileft, iright);
+                        RESULT = new ArrayDec(vtleft, vtright, vt, i, new IntExp(ileft, iright, -1));
+                   :}
+									
+                 ;
+
+vartypes ::= INT:i
+              {: RESULT = "int"; :}
+            | VOID:v
+              {: RESULT = "void"; :}
+            
+            ;
+            
+fundeclaration ::= vartypes:vt ID:i LPAREN paramlist:p RPAREN CURLYLPAREN localdeclarations:l statementlist:s CURLYRPAREN 
+                    {: RESULT =  new FunctionDec(vtleft, vtright, vt, i, p, new CompoundExp(lleft, lright, l, s)); :}
+                |  vartypes:vt ID:i LPAREN VOID:v RPAREN CURLYLPAREN localdeclarations:l statementlist:s CURLYRPAREN 
+                    {: RESULT =  new FunctionDec(vtleft, vtright, vt, i, null, new CompoundExp(lleft, lright, l, s)); :}
+                
+                |  error:e ID:i LPAREN paramlist:p RPAREN CURLYLPAREN localdeclarations:l statementlist:s CURLYRPAREN 
+                    {: parser.report_error("invalid vartype (function declaration)", ileft, iright);
+                        RESULT =  new FunctionDec(ileft, iright, null, i, p, new CompoundExp(lleft, lright, l, s)); :}
+                |  vartypes:vt LPAREN paramlist:p RPAREN CURLYLPAREN localdeclarations:l statementlist:s CURLYRPAREN 
+                    {: parser.report_error("missing id (function declaration)", vtleft, vtright);
+                        RESULT =  new FunctionDec(vtleft, vtright, vt, null, p, new CompoundExp(lleft, lright, l, s)); :}
+                |  vartypes:vt NUM:e LPAREN paramlist:p RPAREN CURLYLPAREN localdeclarations:l statementlist:s CURLYRPAREN 
+                    {: parser.report_error("invalid id (function declaration)", vtleft, vtright);
+                        RESULT =  new FunctionDec(vtleft, vtright, vt, null, p, new CompoundExp(lleft, lright, l, s)); :}
+                |  vartypes:vt ID:i error:e paramlist:p RPAREN CURLYLPAREN localdeclarations:l statementlist:s CURLYRPAREN 
+                    {: parser.report_error("missing left bracket (function declaration)", ileft, iright);
+                        RESULT =  new FunctionDec(vtleft, vtright, vt, i, p, new CompoundExp(lleft, lright, l, s)); :}
+				|  vartypes:vt ID:i LPAREN paramlist:p error:e CURLYLPAREN localdeclarations:l statementlist:s CURLYRPAREN 
+                    {: parser.report_error("missing right bracket (function declaration)", pleft, pright);
+                        RESULT =  new FunctionDec(vtleft, vtright, vt, i, p, new CompoundExp(lleft, lright, l, s)); :}
+                |  vartypes:vt ID:i LPAREN paramlist:p RPAREN error:e localdeclarations:l statementlist:s CURLYRPAREN 
+                    {: parser.report_error("missing left squiggly bracket (function declaration)", pleft, pright);
+                        RESULT =  new FunctionDec(vtleft, vtright, vt, i, p, new CompoundExp(lleft, lright, l, s)); :}
+				|  vartypes:vt ID:i LPAREN paramlist:p RPAREN CURLYLPAREN localdeclarations:l statementlist:s error:e 
+                    {: parser.report_error("missing right squiggly bracket (function declaration)", eleft, eright);
+                        RESULT =  new FunctionDec(vtleft, vtright, vt, i, p, new CompoundExp(sleft, sright, l, s)); :}
+
+
+                |  error:e ID:i LPAREN VOID:p RPAREN CURLYLPAREN localdeclarations:l statementlist:s CURLYRPAREN 
+                    {: parser.report_error("invalid vartype (function declaration)", ileft, iright);
+                        RESULT =  new FunctionDec(ileft, iright, null, i, null, new CompoundExp(lleft, lright, l, s)); :}
+                |  vartypes:vt LPAREN VOID:p RPAREN CURLYLPAREN localdeclarations:l statementlist:s CURLYRPAREN 
+                    {: parser.report_error("missing id (function declaration)", vtleft, vtright);
+                        RESULT =  new FunctionDec(vtleft, vtright, vt, null, null, new CompoundExp(lleft, lright, l, s)); :}
+                |  vartypes:vt NUM:e LPAREN VOID:p RPAREN CURLYLPAREN localdeclarations:l statementlist:s CURLYRPAREN 
+                    {: parser.report_error("invalid id (function declaration)", vtleft, vtright);
+                        RESULT =  new FunctionDec(vtleft, vtright, vt, null, null, new CompoundExp(lleft, lright, l, s)); :}
+				|  vartypes:vt ID:i error:e VOID:p RPAREN CURLYLPAREN localdeclarations:l statementlist:s CURLYRPAREN 
+                    {: parser.report_error("missing left bracket (function declaration)", ileft, iright);
+                        RESULT =  new FunctionDec(vtleft, vtright, vt, i, null, new CompoundExp(lleft, lright, l, s)); :}
+				|  vartypes:vt ID:i LPAREN VOID:p error:e CURLYLPAREN localdeclarations:l statementlist:s CURLYRPAREN 
+                    {: parser.report_error("missing right bracket (function declaration)", pleft, pright);
+                        RESULT =  new FunctionDec(vtleft, vtright, vt, i, null, new CompoundExp(lleft, lright, l, s)); :}
+               |  vartypes:vt ID:i LPAREN VOID:p RPAREN error:e localdeclarations:l statementlist:s CURLYRPAREN 
+                    {: parser.report_error("missing left squiggly bracket (function declaration)", pleft, pright);
+                        RESULT =  new FunctionDec(vtleft, vtright, vt, i, null, new CompoundExp(lleft, lright, l, s)); :}
+               |  vartypes:vt ID:i LPAREN VOID:p RPAREN CURLYLPAREN localdeclarations:l statementlist:s error:e 
+                    {: parser.report_error("missing right squiggly bracket (function declaration)", sleft, sright);
+                        RESULT =  new FunctionDec(vtleft, vtright, vt, i, null, new CompoundExp(lleft, lright, l, s)); :}
+                
+                ;
+                    
+paramlist ::= paramlist:pl COMMA param:p
+                {:  VarDecList t = pl;
+                    while( t.tail != null )
+                        t = t.tail;
+                    t.tail = new VarDecList(p, null);
+                    RESULT = pl;
+                :}
+            | param:p
+              {: RESULT = new VarDecList(p, null); :}
+            ;
+ 
+param  ::= vartypes:vt ID:i
+            {: RESULT = new SimpleDec(vtleft, vtright, vt, i); :}
+        |  vartypes:vt ID:i SQLPAREN SQRPAREN
+            {: RESULT = new ArrayDec(vtleft, vtright, vt, i, null); :}
+        ;
+
+localdeclarations ::= localdeclarations:l vardeclaration:v
+                    {:  VarDecList t = l;
+                        while( t.tail != null )
+                            t = t.tail;
+                        t.tail = new VarDecList(v, null);
+                        RESULT = l;
+                    :}
+                |
+                    {:RESULT = new VarDecList(null, null);:}
+                ;
+                    
+statementlist ::= statementlist:sl statement:s
+                    {:  ExpList t = sl;
+                        while( t.tail != null )
+                            t = t.tail;
+                        t.tail = new ExpList(s, null);
+                        RESULT = sl;
+                    :}
+                |
+                    {: RESULT = new ExpList(null, null); :}
+                ;
+                
+statement ::= expression:e SEMI
+                {: RESULT = e; :}
+            | SEMI:s
+                {: RESULT = new NilExp(sleft, sright); :}
+            | CURLYLPAREN localdeclarations:l statementlist:s CURLYRPAREN
+                {: RESULT = new CompoundExp(lleft, lright, l, s); :}
+            | IF:i LPAREN expression:e RPAREN statement:s 
+                {: RESULT = new IfExp(ileft, iright, e, s, null); :}
+            | IF:i LPAREN expression:e RPAREN statement:s1 ELSE statement:s2
+                {: RESULT = new IfExp(ileft, iright, e, s1, s2); :}
+            | WHILE LPAREN expression:e RPAREN statement:s
+                {: RESULT = new  WhileExp(eleft, eright, e, s); :}
+            | RETURN expression:e SEMI
+                {: RESULT = new ReturnExp(eleft, eright, e); :}
+            | RETURN:r SEMI
+                {: RESULT = new ReturnExp(rleft, rright, null); :}
+            
+            | IF:i error:er expression:e RPAREN statement:s 
+                {: parser.report_error("missing left parentheses (if statement)", eleft, eright); :}
+            | IF:i LPAREN expression:e error:er  
+                {: parser.report_error("missing right parentheses (if statement)", eleft, eright);:}
+            | WHILE error:er expression:e RPAREN statement:s
+                {: parser.report_error("missing left parentheses (while statement)", eleft, eright); :}
+            | WHILE LPAREN expression:e error:er statement:s
+                {: parser.report_error("missing right parentheses (while statement)", eleft, eright); :} 
+            | RETURN:r error:e
+                {: parser.report_error("return error", rleft, rright); :} 
+            | expression:e
+                 {: parser.report_error("invalid syntax", eleft, eright);:}
+            ;
+                
+            
+expression ::= ID:i SQLPAREN expression:e1 SQRPAREN EQ expression:e2
+                {: RESULT = new AssignExp(e1left, e1right, new IndexVar(ileft, iright, i, e1), e2); :}
+            |  ID:i EQ expression:e
+                {: RESULT = new AssignExp(eleft, eright, new SimpleVar(ileft, iright, i), e); :}
+            |  expression:e1 LTE expression:e2
+                {: RESULT = new OpExp(e1left, e1right, e1, OpExp.LTE, e2); :}
+            |  expression:e1 LT expression:e2
+                {: RESULT = new OpExp(e1left, e1right, e1, OpExp.LT, e2); :}
+            |  expression:e1 GT expression:e2
+                {: RESULT = new OpExp(e1left, e1right, e1, OpExp.GT, e2); :}
+            |  expression:e1 GTE expression:e2
+                {: RESULT = new OpExp(e1left, e1right, e1, OpExp.GTE, e2); :}
+            |  expression:e1 EQEQ expression:e2
+                {: RESULT = new OpExp(e1left, e1right, e1, OpExp.EQEQ, e2); :}
+            |  expression:e1 NEQ expression:e2
+                {: RESULT = new OpExp(e1left, e1right, e1, OpExp.NEQ, e2); :}
+            |  expression:e1 PLUS expression:e2
+                {: RESULT = new OpExp(e1left, e1right, e1, OpExp.PLUS, e2); :}
+            |  expression:e1 MINUS expression:e2
+                {: RESULT = new OpExp(e1left, e1right, e1, OpExp.MINUS, e2); :}
+            |  expression:e1 TIMES expression:e2
+                {: RESULT = new OpExp(e1left, e1right, e1, OpExp.TIMES, e2); :}
+            |  expression:e1 OVER expression:e2
+                {: RESULT = new OpExp(e1left, e1right, e1, OpExp.OVER, e2); :}
+            |  LPAREN expression:e RPAREN 
+                {: RESULT = e; :}
+            |  ID:i SQLPAREN expression:e SQRPAREN
+                {: RESULT = new VarExp(ileft, iright, new IndexVar(ileft, iright, i, e)); :}
+            |  ID:i
+                {: RESULT = new VarExp(ileft, iright, new SimpleVar(ileft, iright, i)); :}
+            |  ID:i LPAREN arglist:a RPAREN
+                {: RESULT = new CallExp(ileft,iright, i, a); :}
+            |  ID:i LPAREN RPAREN
+                {: RESULT = new CallExp(ileft,iright, i, null); :}
+            |  NUM:n
+                {: RESULT = new IntExp(nleft, nright, Integer.parseInt(n)); :}
+            
+            ;
+        
+
+        
+arglist ::=  arglist:a COMMA expression:e
+            {: ExpList t = a;
+                while( t.tail != null )
+                    t = t.tail;
+                t.tail = new ExpList(e, null);
+                RESULT = a;
+            :}
+          |  expression:e
+            {: RESULT = new ExpList(e, null); :}
+          ;
+

@@ -1,0 +1,65 @@
+00008500 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.02
+Created On: 11/16/2016 7:30:36 PM
+
+Line 1 ERROR: Illegal symbol
+00000000                             1  00008500 Starting Address
+Line 2 ERROR: Invalid syntax
+00000000                             2  Assembler used: EASy68K Editor/Assembler v5.15.02
+Line 3 ERROR: Invalid syntax
+00000000                             3  Created On: 11/16/2016 7:30:26 PM
+00000000                             4  
+Line 5 ERROR: Illegal symbol
+00000000                             5  00000000                             1  *-----------------------------------------------------------
+Line 6 ERROR: Illegal symbol
+00000000                             6  00000000                             2  * Title      :
+Line 7 ERROR: Illegal symbol
+00000000                             7  00000000                             3  * Written by :
+Line 8 ERROR: Illegal symbol
+00000000                             8  00000000                             4  * Date       :
+Line 9 ERROR: Illegal symbol
+00000000                             9  00000000                             5  * Description:
+Line 10 ERROR: Illegal symbol
+00000000                            10  00000000                             6  *-----------------------------------------------------------
+Line 11 ERROR: Illegal symbol
+00000000                            11  00008500                             7              ORG    $8500
+Line 12 ERROR: Illegal symbol
+00000000                            12  00008500                             8  
+Line 13 ERROR: Illegal symbol
+00000000                            13  00008500  363C 04D2                  9  T5          MOVE        #1234,D3
+Line 14 ERROR: Illegal symbol
+00000000                            14  00008504  3F03                      10              MOVE        D3,-(SP)
+Line 15 ERROR: Invalid opcode
+00000000                            15  Line 11 ERROR: Undefined symbol
+Line 16 ERROR: Illegal symbol
+00000000                            16  00008506  4EB9 004F052A             11              JSR         DISPLAY
+Line 17 ERROR: Illegal symbol
+00000000                            17  0000850C  4FEF 0002                 12              LEA         2(SP),SP
+Line 18 ERROR: Illegal symbol
+00000000                            18  00008510  4E73                      13              RTE
+Line 19 ERROR: Illegal symbol
+00000000                            19  00008512                            14              END         T5
+00000000                            20  
+Line 21 ERROR: Illegal symbol
+00000000                            21  1 error detected
+Line 22 ERROR: Invalid opcode
+00000000                            22  No warnings generated
+00000000                            23  
+00000000                            24  
+Line 25 ERROR: Invalid opcode
+00000000                            25  SYMBOL TABLE INFORMATION
+Line 26 ERROR: Invalid opcode
+00000000                            26  Symbol-name         Value
+Line 27 ERROR: Illegal symbol
+00000000                            27  -------------------------
+Line 28 ERROR: Invalid opcode
+00000000                            28  T5                  8500
+Line 29 WARNING: END directive missing, starting address not set
+
+24 errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------

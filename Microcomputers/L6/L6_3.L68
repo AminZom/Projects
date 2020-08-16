@@ -1,0 +1,47 @@
+00008000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.02
+Created On: 10/26/2016 7:28:50 PM
+
+00008000                             1          ORG     $8000
+00008000  41F9 00009000              2  START   LEA     MATRIX,A0
+00008006  0C00 0002                  3  OUTLOOP CMPI.B  #2,D0
+0000800A  6E00 0034                  4          BGT     EXIT
+0000800E  1200                       5          MOVE.B  D0,D1
+00008010  5201                       6          ADD.B   #1,D1
+00008012  0C01 0003                  7  INLOOP  CMPI.B  #3,D1
+00008016  6E00 0024                  8          BGT     ITERI
+0000801A  1600                       9          MOVE.B  D0,D3
+0000801C  C7FC 0004                 10          MULS    #4,D3
+00008020  D601                      11          ADD.B   D1,D3
+00008022  1430 3800                 12          MOVE.B  (A0,D3.L),D2
+00008026  1801                      13          MOVE.B  D1,D4
+00008028  C9FC 0004                 14          MULS    #4,D4
+0000802C  D800                      15          ADD.B   D0,D4
+0000802E  11B0 4800 3800            16          MOVE.B  (A0,D4.L),(A0,D3.L)
+00008034  1182 4800                 17          MOVE.B  D2,(A0,D4.L)
+00008038  5201                      18          ADD.B   #1,D1
+0000803A  60D6                      19          BRA     INLOOP
+0000803C  5200                      20  ITERI   ADD.B   #1,D0
+0000803E  60C6                      21          BRA     OUTLOOP
+00008040  4E4E                      22  EXIT    TRAP    #14
+00008042                            23          
+00009000                            24          ORG     $9000
+00009000= 01 02 03 04               25  MATRIX  DC.B    1,2,3,4
+00009004= 05 06 07 08               26          DC.B    5,6,7,8
+00009008= 09 0A 0B 0C               27          DC.B    9,10,11,12
+0000900C= 0D 0E 0F 10               28          DC.B    13,14,15,16
+00009010                            29          END     START   
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+EXIT                8040
+INLOOP              8012
+ITERI               803C
+MATRIX              9000
+OUTLOOP             8006
+START               8000

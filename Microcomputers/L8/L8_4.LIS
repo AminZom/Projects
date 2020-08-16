@@ -1,0 +1,48 @@
+
+Source file: L8_4.X68
+Assembled on: 16-11-09 at: 20:13:46
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1  00008000                        ORG       $8000
+    2  00008000 4FF900009020 START:    LEA       $9020,SP
+    3  00008006 41F9A0A0A0A0           LEA       $A0A0A0A0,A0
+    4  0000800C 43F9A1A1A1A1           LEA       $A1A1A1A1,A1
+    5  00008012 203CD0D0D0D0           MOVE.L    #$D0D0D0D0,D0
+    6  00008018 223CD1D1D1D1           MOVE.L    #$D1D1D1D1,D1
+    7  0000801E 3F3900008500           MOVE.W    X,-(SP)
+    8  00008024 3F3900008502           MOVE.W    Y,-(SP)
+    9  0000802A 487900008504           PEA       Z
+   10  00008030 4EB90000803C           JSR       SQUARE
+   11  00008036 4FEF0008               LEA       8(SP),SP
+   12  0000803A 4E4E                   TRAP      #14
+   13                                
+   14  0000803C 4E50FFFA     SQUARE:   LINK      A0,#-6
+   15  00008040 48E7C040               MOVEM.L   D0-D1/A1,-(SP)
+   16  00008044 3028000E               MOVE.W    14(A0),D0
+   17  00008048 C1C0                   MULS      D0,D0
+   18  0000804A 3140FFFE               MOVE.W    D0,-2(A0)
+   19  0000804E 3228000C               MOVE.W    12(A0),D1
+   20  00008052 C3C1                   MULS      D1,D1
+   21  00008054 3141FFFC               MOVE.W    D1,-4(A0)
+   22  00008058 3028000E               MOVE.W    14(A0),D0
+   23  0000805C 3228000C               MOVE.W    12(A0),D1
+   24  00008060 C1C1                   MULS      D1,D0
+   25  00008062 C1FC0002               MULS      #2,D0
+   26  00008066 3140FFFA               MOVE.W    D0,-6(A0)
+   27  0000806A 3028FFFE               MOVE.W    -2(A0),D0
+   28  0000806E D068FFFC               ADD.W     -4(A0),D0
+   29  00008072 D068FFFA               ADD.W     -6(A0),D0
+   30  00008076 22680008               MOVEA.L   8(A0),A1
+   31  0000807A 3280                   MOVE.W    D0,(A1)
+   32  0000807C 4C9F0203               MOVEM     (SP)+,D0-D1/A1
+   33  00008080 4E58                   UNLK      A0
+   34  00008082 4E75                   RTS       
+   35                                    
+   36  00008500                        ORG       $8500
+   37  00008500 0002         X:        DC.W      2
+   38  00008502 0003         Y:        DC.W      3
+   39  00008504 00000002     Z:        DS.W      1
+   40           00008000               END       START
+
+Lines: 40, Errors: 0, Warnings: 0.

@@ -1,0 +1,15 @@
+================================================================
+To get familiar with using tcpdump, you are required to use it to view
+the network traffic your assignment 1 program generates. tcpdump is
+installed on the Friend 010 lab machines in /usr/sbin/tcpdump. For
+example, to listen for traffic on port 80, you can run the following:
+
+   /usr/sbin/tcpdump port 80
+
+Use tcpdump to view some packets that your program is
+transmitting. Describe below what you see. Also include a few lines of
+the tcpdump output and the command you ran.
+================================================================
+
+FILL IN HERE
+

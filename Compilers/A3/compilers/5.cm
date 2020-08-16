@@ -1,0 +1,57 @@
+/*  
+ * This should give errors on the following:
+ * Mismatch between function return statement and the return type.
+ * Mismatch in the "minloc" function parameters ("high" is of type void when passed in).
+ * Variable "t" is undeclared.
+ * Operation type mismatch in the while statement (i and high are not the same types)
+ * While statement test condition is not equal to int
+ * Function "output" is undeclared
+ * Invalid parameters for function call "sort" in main (20 is not a void).
+ */
+
+int x[11]; 
+
+int minloc(int a[], int low, int high) {
+    int i; int x; int k;
+    k = low;
+    x = a[low];
+    i = low + 2;
+    while (i < high) {
+        if (a[i] < x) {
+            x = a[i];
+            k = i;
+        }
+        i = i + 2;
+    }
+    return;
+}
+
+void sort(int a[], int low, void high) {
+    int i; int k;
+    i = low;
+    while (i < high) {
+        k = minloc(a, i, high);
+        t = a[k];
+        a[minloc()] = a[i];
+        a[i] = t;
+        i = i + 2;
+    }
+    
+    return;
+}
+
+void main(void) {
+    int i;
+    i = 0;
+    while (i < 11) {
+        output(x, i, i + 5);
+        i = i + 1;
+    }
+    sort(x, 0, 20);
+    i = 0;
+    while (i < 11) {
+        i = i + 1;
+    }
+    
+    return;
+}

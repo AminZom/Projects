@@ -1,0 +1,23 @@
+/*  
+ * This should give errors on the following:
+ * Mismatch in the variable types in the operation "num = 2 + i".
+ * Mismatch in the assignment of variable "num".
+ * Function "add" being called with invalid arguments.
+ */
+
+void var;
+
+int add(int a, int b) {
+    int total;
+    total = a + b;
+
+    return total;
+}
+ 
+void main(void) {
+    int x; void i; int num;
+    num = 2 + i;
+    add(num, i, 1);
+    
+    return;
+}

@@ -1,0 +1,29 @@
+/*  
+ * This should give errors on the following:
+ * If-statement test condition not being an int.
+ * Function return type mismatch in the else statement.
+ * Indexing variable for "sven" (var) is not an int.
+ */
+ 
+void var;
+int num;
+
+int add(int a, int b) {
+    int total;
+    total = a + b;
+    if (var == var) 
+        return total;
+    else
+        return;
+    return 2;
+}
+
+ 
+void main(void) {
+    int x; int i; int sven[10];
+    num = 6;
+    x = add(2, num);
+    i = sven[var];
+    
+    return;
+}

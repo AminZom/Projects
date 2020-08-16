@@ -1,0 +1,37 @@
+00008000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.15.02
+Created On: 10/26/2016 7:25:55 PM
+
+00008000                             1          ORG     $8000
+00008000  41F9 00009000              2  START   LEA     STRING1,A0
+00008006  43F9 0000900C              3          LEA     STRING2,A1
+0000800C  103C 00FF                  4          MOVE.B  #$FF,D0
+00008010  2218                       5  DO      MOVE.L  (A0)+,D1
+00008012  2419                       6          MOVE.L  (A1)+,D2
+00008014  B481                       7          CMP.L   D1,D2
+00008016  6700 0006                  8          BEQ     WHILE
+0000801A  103C 0000                  9          MOVE.B  #$00,D0
+0000801E  0C81 0000000D             10  WHILE   CMPI.L  #$0D,D1
+00008024  6700 0008                 11          BEQ     EXIT
+00008028  0C00 00FF                 12          CMPI.B  #$FF,D0
+0000802C  67E2                      13          BEQ     DO
+0000802E  4E4E                      14  EXIT    TRAP    #14
+00008030                            15          
+00009000                            16          ORG     $9000
+00009000= 68656C6C 6F000000 ...     17  STRING1 DC.L    'hello',$D
+0000900C= 68656C6C 6F000000 ...     18  STRING2 DC.L    'hello',$D
+00009018                            19          END     START   
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+DO                  8010
+EXIT                802E
+START               8000
+STRING1             9000
+STRING2             900C
+WHILE               801E

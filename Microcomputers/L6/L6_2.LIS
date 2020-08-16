@@ -1,0 +1,29 @@
+
+Source file: L6_2.X68
+Assembled on: 16-10-26 at: 19:05:36
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1  00008000                        ORG       $8000
+    2  00008000 41F900009000 START:    LEA       STRING1,A0
+    3  00008006 43F90000900C           LEA       STRING2,A1
+    4  0000800C 103C00FF               MOVE.B    #$FF,D0
+    5  00008010 2218         DO:       MOVE.L    (A0)+,D1
+    6  00008012 2419                   MOVE.L    (A1)+,D2
+    7  00008014 B481                   CMP.L     D1,D2
+    8  00008016 67000006               BEQ       WHILE
+    9  0000801A 103C0000               MOVE.B    #$00,D0
+   10  0000801E 0C810000000D WHILE:    CMPI.L    #$0D,D1
+   11  00008024 67000008               BEQ       EXIT
+   12  00008028 0C0000FF               CMPI.B    #$FF,D0
+   13  0000802C 67E2                   BEQ       DO
+   14  0000802E 4E4E         EXIT:     TRAP      #14
+   15                                
+   16  00009000                        ORG       $9000
+   17  00009000 68656C6C6F00 STRING1:  DC.L      'hello',$D
+                00000000000D
+   18  0000900C 776F726C6400 STRING2:  DC.L      'world',$D
+                00000000000D
+   19           00008000               END       START
+
+Lines: 19, Errors: 0, Warnings: 0.

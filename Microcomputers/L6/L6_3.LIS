@@ -1,0 +1,45 @@
+
+Source file: L6_3.X68
+Assembled on: 16-10-26 at: 19:46:38
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1  00008000                        ORG       $8000
+    2  00008000 41F900009000 START:    LEA       MATRIX,A0
+    3  00008006 0C000002     OUTLOOP:  CMPI.B    #2,D0
+    4  0000800A 6E000034               BGT       EXIT
+    5  0000800E 2200                   MOVE.L    D0,D1
+    6  00008010 5201                   ADD.B     #1,D1
+    7  00008012 0C010003     INLOOP:   CMPI.B    #3,D1
+    8  00008016 6E000024               BGT       ITERI
+    9  0000801A 1600                   MOVE.B    D0,D3
+   10  0000801C C7FC0004               MULS      #4,D3
+   11  00008020 D681                   ADD.L     D1,D3
+   12  00008022 24303800               MOVE.L    (A0,D3.L),D2
+   13  00008026 2801                   MOVE.L    D1,D4
+   14  00008028 C9FC0004               MULS      #4,D4
+   15  0000802C D880                   ADD.L     D0,D4
+   16  0000802E 21B048003800           MOVE.L    (A0,D4.L),(A0,D3.L)
+   17  00008034 21824800               MOVE.L    D2,(A0,D4.L)
+   18  00008038 5281                   ADD.L     #1,D1
+   19  0000803A 60D6                   BRA       INLOOP
+   20  0000803C 5280         ITERI:    ADD.L     #1,D0
+   21  0000803E 60C6                   BRA       OUTLOOP
+   22  00008040 4E4E         EXIT:     TRAP      #14
+   23                                
+   24  00009000                        ORG       $9000
+   25  00009000 000000010000 MATRIX:   DC.L      1,2,3,4
+                000200000003
+                00000004    
+   26  00009010 000000050000           DC.L      5,6,7,8
+                000600000007
+                00000008    
+   27  00009020 000000090000           DC.L      9,10,11,12
+                000A0000000B
+                0000000C    
+   28  00009030 0000000D0000           DC.L      13,14,15,16
+                000E0000000F
+                00000010    
+   29           00008000               END       START
+
+Lines: 29, Errors: 0, Warnings: 0.

@@ -1,0 +1,83 @@
+**************************
+Mohammadamin Sheikhtaheri
+0930853
+CIS3530 - Assignment 3
+Nov 11. 2019
+README
+**************************
+
+*************
+Create Tables
+*************
+
+Table creation file: a3data.sql
+
+Usage: \i a3data.sql
+
+*************
+Program 1 Use
+*************
+
+Compilation: \i p1.sql
+
+Usage Example: select program1('Smith');   EX. For customer name "Smith"
+
+*************
+Program 2 Use
+*************
+
+Compilation: \i p2.sql
+
+Usage Example: select program2('Esso');   EX. For vendor name "Esso"
+**Please note that if multiple vendors have the same name, but are from different cities, the program takes both into consideration**
+
+*************
+Program 3 Use
+*************
+
+Compilation: \i p3.sql
+
+Usage Example: select program3('A4', 'Donaldson', 'ONT', 3500);   EX. For customer whose account number is "A4", name is "Donaldson', is from "ONT", with a credit limit of 3500
+**Please note that current balance is excluded from user input since it should always be 0 when adding a new customer record (as it says in the question)**
+
+*************
+Program 4 Use
+*************
+
+Compilation: \i p4.sql
+
+Usage Example: select program4();
+
+*************
+Program 5 Use
+*************
+
+Compilation: \i p5.sql
+
+Usage Example: select program5();
+
+*************
+Program 6 Use
+*************
+
+Compilation: \i p6.sql
+
+Usage Example: select program6();
+
+*************
+Program 7 Use
+*************
+
+Compilation: \i p7.sql
+
+Usage Example: select program7();
+
+*************
+Program 8 Use
+*************
+
+Compilation: \i p8.sql
+
+Usage Example: select program8('T5', 'V2', 'A3', 119.99); 	EX. For transaction whose transaction number is "T5", vendor number is "V2', customer account number is "A3", with an amount of $119.99
+
+

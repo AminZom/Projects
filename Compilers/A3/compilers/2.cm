@@ -1,0 +1,15 @@
+/*  
+ * This should give errors on the 3
+ * undeclared function calls "input()", "gcd()", and "output()",
+ * and also the undeclared variable "c".
+ */
+ 
+void main(void) {
+    int x; int y;
+    x = input();
+    c = 12;
+    output(gcd(x, y));
+    
+    return;
+}
+

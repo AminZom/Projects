@@ -1,0 +1,48 @@
+
+Source file: L8_3.X68
+Assembled on: 16-11-09 at: 18:52:32
+          by: X68K PC-2.2 Copyright (c) University of Teesside 1989,96
+Defaults: ORG $0/FORMAT/OPT A,BRL,CEX,CL,FRL,MC,MD,NOMEX,NOPCO
+
+    1  00008000                        ORG       $8000
+    2  00008000 4FF900009022 START:    LEA       $9022,SP
+    3  00008006 203CD0D0D0D0           MOVE.L    #$D0D0D0D0,D0
+    4  0000800C 203CD1D1D1D1           MOVE.L    #$D1D1D1D1,D0
+    5  00008012 203CD2D2D2D2           MOVE.L    #$D2D2D2D2,D0
+    6  00008018 41F9A0A0A0A0           LEA       $A0A0A0A0,A0
+    7  0000801E 487900008500           PEA       X
+    8  00008024 487900008502           PEA       Y
+    9  0000802A 487900008504           PEA       Z
+   10  00008030 487900008506           PEA       W
+   11  00008036 4EB900008042           JSR       QUAD
+   12  0000803C 4FEF0010               LEA       16(SP),SP
+   13  00008040 4E4E                   TRAP      #14
+   14                                
+   15  00008042 48E7E080     QUAD:     MOVEM.L   D0-D2/A0,-(SP)
+   16  00008046 206F0020               MOVEA.L   32(SP),A0
+   17  0000804A 3010                   MOVE.W    (A0),D0
+   18  0000804C C1C0                   MULS      D0,D0
+   19  0000804E C1FC0005               MULS      #5,D0
+   20  00008052 3210                   MOVE.W    (A0),D1
+   21  00008054 C3FC0004               MULS      #4,D1
+   22  00008058 206F001C               MOVEA.L   28(SP),A0
+   23  0000805C 3410                   MOVE.W    (A0),D2
+   24  0000805E C3C2                   MULS      D2,D1
+   25  00008060 206F0018               MOVEA.L   24(SP),A0
+   26  00008064 3410                   MOVE.W    (A0),D2
+   27  00008066 C5C2                   MULS      D2,D2
+   28  00008068 9041                   SUB.W     D1,D0
+   29  0000806A D042                   ADD.W     D2,D0
+   30  0000806C 206F0014               MOVEA.L   20(SP),A0
+   31  00008070 3080                   MOVE.W    D0,(A0)
+   32  00008072 4CDF0107               MOVEM.L   (SP)+,D0-D2/A0
+   33  00008076 4E75                   RTS       
+   34                                    
+   35  00008500                        ORG       $8500
+   36  00008500 0003         X:        DC.W      3
+   37  00008502 0004         Y:        DC.W      4
+   38  00008504 0005         Z:        DC.W      5
+   39  00008506 00000002     W:        DS.W      1
+   40           00008000               END       START
+
+Lines: 40, Errors: 0, Warnings: 0.
